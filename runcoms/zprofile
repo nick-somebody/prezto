@@ -69,3 +69,5 @@ fi
 
 export PATH=$PATH:~/.node/bin
 export PATH=$PATH:~/.bin
+export PATH=$PATH:~/.local/bin
+export QT_QPA_PLATFORMTHEME="qt5ct"
