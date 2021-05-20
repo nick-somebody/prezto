@@ -12,8 +12,8 @@ if [[ -s "${NVM_DIR:=$HOME/.nvm}/nvm.sh" ]]; then
 
 # Load package manager installed NVM into the shell session.
 elif (( $+commands[brew] )) && \
-  [[ -d "${nvm_prefix::="$(brew --prefix 2> /dev/null)"/opt/nvm}" ]]; then
-  source "$(brew --prefix nvm)/nvm.sh"
+      [[ -d "${nvm_prefix::="$(brew --prefix nvm 2> /dev/null)"}" ]]; then
+  source "${nvm_prefix}/nvm.sh"
   unset nvm_prefix
 
 # Load manually installed nodenv into the shell session.
@@ -39,12 +39,13 @@ typeset -A compl_commands=(
 
 for compl_command in "${(k)compl_commands[@]}"; do
   if (( $+commands[$compl_command] )); then
-    cache_file="${TMPDIR:-/tmp}/prezto-$compl_command-cache.$UID.zsh"
+    cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/prezto/$compl_command-cache.zsh"
 
     # Completion commands are slow; cache their output if old or missing.
     if [[ "$commands[$compl_command]" -nt "$cache_file" \
           || "${ZDOTDIR:-$HOME}/.zpreztorc" -nt "$cache_file" \
           || ! -s "$cache_file" ]]; then
+      mkdir -p "$cache_file:h"
       command ${=compl_commands[$compl_command]} >! "$cache_file" 2> /dev/null
     fi
 
